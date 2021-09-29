@@ -1,7 +1,7 @@
 class Conta:
 
     #método construtor ao criar um objeto deve-se enviar
-    #os parametros     #deste método
+    #os parametros deste método
     def __init__(self, numero, titular, saldo, limite):
         #print("Construindo objeto ... {}".format(self))
         #abaixo são os atributos (privados) da classe que recebe o parametros
@@ -15,21 +15,32 @@ class Conta:
         print("Saldo de {} do titular {}".format(self.__saldo, self.__titular))
 
     def deposita(self, valor):
-        self.__saldo += valor
+        if (self.__verifica_valor_negativo(valor)):
+            self.__saldo += valor
+
+    #método criado a mais para validar se o valor da operação não está sendo enviado como negativo.
+    def __verifica_valor_negativo(self, valor):
+        if (valor < 0):
+            print("Esse valor é negativo, não foi possível realizar sua operação!")
+            return False;
+        else :
+            return True;
 
     def __pode_sacar(self, valor_a_sacar):
         valor_disponivel_a_sacar = self.__saldo + self.__limite
         return valor_a_sacar <= valor_disponivel_a_sacar
 
     def saca(self, valor):
-        if(self.__pode_sacar(valor)):
-            self.__saldo -= valor
-        else:
-            print("O valor {} passou o limite".format(valor))
+        if (self.__verifica_valor_negativo(valor)):
+            if(self.__pode_sacar(valor)):
+                self.__saldo -= valor
+            else:
+                print("Não foi possível sacar! O valor {} passou o limite".format(valor))
 
     def transfere(self, valor, destino):
-        self.saca(valor)
-        destino.deposita(valor)
+        if (self.__verifica_valor_negativo(valor)):
+            self.saca(valor)
+            destino.deposita(valor)
 
     #métodos que são propriedade para acessar os atributos
     @property
